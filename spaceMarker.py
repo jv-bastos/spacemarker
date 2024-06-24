@@ -21,19 +21,26 @@ preto = (0,0,0)
 
 estrelas = {}
 
+botao_iniciar = None
+botao_configuracoes = None
+botao_sair = None
+
 def menu_inicial():
+    global botao_iniciar, botao_configuracoes, botao_sair
+    
     rodando = True
     while rodando:
         for evento in pygame.event.get():
             if evento.type == pygame.QUIT:
                 pygame.quit()
                 quit()
-            elif evento.type == pygame.KEYDOWN:
-                if evento.key == pygame.K_i:
+            elif evento.type == pygame.MOUSEBUTTONDOWN:
+                pos_mouse = pygame.mouse.get_pos()
+                if botao_iniciar.collidepoint(pos_mouse):
                     rodando = False
-                elif evento.key == pygame.K_c:
+                elif botao_configuracoes.collidepoint(pos_mouse):
                     configuracoes()
-                elif evento.key == pygame.K_s:
+                elif botao_sair.collidepoint(pos_mouse):
                     pygame.quit()
                     quit()
 
@@ -42,27 +49,34 @@ def menu_inicial():
         texto_titulo = fonte_titulo.render('SPACE MARKER', True, branco)
         titulo_rect = texto_titulo.get_rect(center=(tela.get_width() // 2, 100))
         tela.blit(texto_titulo, titulo_rect)
-        largura_opcao = 200  
-        altura_opcao = 50  
-        espacamento = 20  
-        margem_inferior = 50  
 
-        opcoes = [
-            ('i', 'Iniciar'),
-            ('c', 'Configurações'),
-            ('s', 'Sair')
-        ]
-        x = (tela.get_width() - (largura_opcao * len(opcoes) + espacamento * (len(opcoes) - 1))) // 2
+        largura_opcao = 200
+        altura_opcao = 50
+        espacamento = 20
+        margem_inferior = 50
+
+        x = (tela.get_width() - (largura_opcao * 3 + espacamento * 2)) // 2
         y = tela.get_height() - margem_inferior - altura_opcao
 
-        for chave, texto_opcao in opcoes:
-            retangulo = pygame.Rect(x, y, largura_opcao, altura_opcao)
-            pygame.draw.rect(tela, branco, retangulo, 2)  
-            texto = fonte_opcoes.render(texto_opcao, True, branco)
-            texto_rect = texto.get_rect(center=retangulo.center)
-            tela.blit(texto, texto_rect)
+        botao_iniciar = pygame.Rect(x, y, largura_opcao, altura_opcao)
+        pygame.draw.rect(tela, branco, botao_iniciar, 2)
+        texto_iniciar = fonte_opcoes.render('Iniciar', True, branco)
+        texto_iniciar_rect = texto_iniciar.get_rect(center=botao_iniciar.center)
+        tela.blit(texto_iniciar, texto_iniciar_rect)
 
-            x += largura_opcao + espacamento
+        x += largura_opcao + espacamento
+        botao_configuracoes = pygame.Rect(x, y, largura_opcao, altura_opcao)
+        pygame.draw.rect(tela, branco, botao_configuracoes, 2)
+        texto_configuracoes = fonte_opcoes.render('Configurações', True, branco)
+        texto_configuracoes_rect = texto_configuracoes.get_rect(center=botao_configuracoes.center)
+        tela.blit(texto_configuracoes, texto_configuracoes_rect)
+
+        x += largura_opcao + espacamento
+        botao_sair = pygame.Rect(x, y, largura_opcao, altura_opcao)
+        pygame.draw.rect(tela, branco, botao_sair, 2)
+        texto_sair = fonte_opcoes.render('Sair', True, branco)
+        texto_sair_rect = texto_sair.get_rect(center=botao_sair.center)
+        tela.blit(texto_sair, texto_sair_rect)
 
         pygame.display.update()
 
